@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.simongoller.baleTrackerAPI.jwt.JwtUtilsTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2023-12-06T19:12:52" hostname="Simons-MacBook-Air.local" time="0.596">
+  <properties/>
+  <testcase name="should generate valid JWT token()" classname="com.simongoller.baleTrackerAPI.jwt.JwtUtilsTest" time="0.59"/>
+  <testcase name="should return false for expired JWT token()" classname="com.simongoller.baleTrackerAPI.jwt.JwtUtilsTest" time="0.003"/>
+  <testcase name="should return false for invalid JWT token()" classname="com.simongoller.baleTrackerAPI.jwt.JwtUtilsTest" time="0.001"/>
+  <system-out><![CDATA[20:12:52.942 [Test worker] INFO com.simongoller.baleTrackerAPI.jwt.JwtUtils -- New token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0dXNlciIsImlhdCI6MTcwMTg4OTk3MiwiZXhwIjoxNzAxODg5OTc1fQ.Wdtl57F_Mtejz85fxngwYD0KcndMmz5QF2dDq_hVnYk
+20:12:52.974 [Test worker] INFO com.simongoller.baleTrackerAPI.jwt.JwtUtils -- New token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0dXNlciIsImlhdCI6MTcwMTg4OTk3MiwiZXhwIjoxNzAxODg5OTcyfQ.0GsMQxrWhjJyB5HQU9creTZhvXFWMNiZHlYHJmzySvA
+20:12:52.975 [Test worker] ERROR com.simongoller.baleTrackerAPI.jwt.JwtUtils -- JWT token is expired: JWT expired 974 milliseconds ago at 2023-12-06T19:12:52.000Z. Current time: 2023-12-06T19:12:52.974Z. Allowed clock skew: 0 milliseconds.
+20:12:52.977 [Test worker] ERROR com.simongoller.baleTrackerAPI.jwt.JwtUtils -- Invalid JWT token: Invalid compact JWT string: Compact JWSs must contain exactly 2 period characters, and compact JWEs must contain exactly 4.  Found: 0
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

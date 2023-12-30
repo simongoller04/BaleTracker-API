@@ -1,5 +1,14 @@
 package com.simongoller.baleTrackerAPI.constants
 
+enum class RegistrationState {
+    USERNAME_TAKEN,
+    EMAIL_TAKEN,
+    USER_CREATED
+}
+
+enum class LoginError {
+    INVALID_CREDENTIALS
+}
 class StringConstants {
     companion object {
         const val USERNAME_TAKEN = "Username is already taken!"

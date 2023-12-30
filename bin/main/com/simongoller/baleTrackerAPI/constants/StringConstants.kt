@@ -1,0 +1,10 @@
+package com.simongoller.baleTrackerAPI.constants
+
+class StringConstants {
+    companion object {
+        const val USERNAME_TAKEN = "Username is already taken!"
+        const val EMAIL_TAKEN = "Email is already in use!"
+        const val USER_CREATED = "User created:"
+        const val INVALID_CREDENTIALS = "Invalid username or password"
+    }
+}

@@ -29,6 +29,8 @@ dependencies {
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
 	implementation("jakarta.persistence:jakarta.persistence-api:3.1.0")
 	implementation("io.jsonwebtoken:jjwt:0.12.3")
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
+	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("io.projectreactor:reactor-test")

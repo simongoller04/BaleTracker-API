@@ -1,6 +1,6 @@
 package com.simongoller.baleTrackerAPI.controller
 
-import com.simongoller.baleTrackerAPI.constants.RegistrationState
+import com.simongoller.baleTrackerAPI.model.response.RegistrationState
 import com.simongoller.baleTrackerAPI.model.token.TokenDTO
 import com.simongoller.baleTrackerAPI.model.user.UserLoginDTO
 import com.simongoller.baleTrackerAPI.model.user.UserRegisterDTO
@@ -21,7 +21,7 @@ class AuthController(
     }
 
     @RequestMapping("/login")
-    fun login(@RequestBody userLoginDTO: UserLoginDTO): ResponseEntity<TokenDTO> {
+    fun login(@RequestBody userLoginDTO: UserLoginDTO): ResponseEntity<TokenDTO?> {
         return authService.login(userLoginDTO)
     }
 

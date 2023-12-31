@@ -1,7 +1,7 @@
 package com.simongoller.baleTrackerAPI.service
 
-import com.simongoller.baleTrackerAPI.constants.RegistrationState
 import com.simongoller.baleTrackerAPI.jwt.JwtUtils
+import com.simongoller.baleTrackerAPI.model.response.RegistrationState
 import com.simongoller.baleTrackerAPI.model.token.RefreshToken
 import com.simongoller.baleTrackerAPI.model.token.TokenDTO
 import com.simongoller.baleTrackerAPI.model.user.User
@@ -50,7 +50,7 @@ class AuthService(
         return ResponseEntity.status(HttpStatus.OK).body(RegistrationState.USER_CREATED)
     }
 
-    fun login(userLoginDTO: UserLoginDTO): ResponseEntity<TokenDTO> {
+    fun login(userLoginDTO: UserLoginDTO): ResponseEntity<TokenDTO?> {
         return try {
             val authentication: Authentication = authenticationManager.authenticate(
                 UsernamePasswordAuthenticationToken(userLoginDTO.username, userLoginDTO.password)
@@ -68,7 +68,7 @@ class AuthService(
 
             ResponseEntity.status(HttpStatus.OK).body(TokenDTO(accessToken, refreshToken))
         } catch (ex: AuthenticationException) {
-            ResponseEntity.badRequest().body(TokenDTO(accessToken = "$ex", refreshToken = ""))
+            ResponseEntity.badRequest().body(null)
         }
     }
 

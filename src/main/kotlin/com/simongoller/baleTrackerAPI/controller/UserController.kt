@@ -1,5 +1,6 @@
 package com.simongoller.baleTrackerAPI.controller
 
+import com.simongoller.baleTrackerAPI.model.response.UserDeletionResponse
 import com.simongoller.baleTrackerAPI.model.user.UserDTO
 import com.simongoller.baleTrackerAPI.service.UserService
 import org.springframework.http.ResponseEntity
@@ -14,5 +15,10 @@ class UserController(
     @GetMapping("/me")
     fun getUser(): ResponseEntity<UserDTO> {
         return userService.getUser()
+    }
+
+    @DeleteMapping("/delete")
+    fun deleteUser(): ResponseEntity<UserDeletionResponse> {
+        return userService.deleteUser()
     }
 }

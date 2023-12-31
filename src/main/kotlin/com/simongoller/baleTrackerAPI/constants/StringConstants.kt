@@ -1,11 +1,5 @@
 package com.simongoller.baleTrackerAPI.constants
 
-enum class RegistrationState {
-    USERNAME_TAKEN,
-    EMAIL_TAKEN,
-    USER_CREATED
-}
-
 enum class LoginError {
     INVALID_CREDENTIALS
 }

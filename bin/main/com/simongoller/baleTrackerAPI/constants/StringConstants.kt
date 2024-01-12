@@ -1,5 +1,8 @@
 package com.simongoller.baleTrackerAPI.constants
 
+enum class LoginError {
+    INVALID_CREDENTIALS
+}
 class StringConstants {
     companion object {
         const val USERNAME_TAKEN = "Username is already taken!"

@@ -44,7 +44,8 @@ class AuthService(
         val user = User(null,
             userRegisterDTO.email,
             userRegisterDTO.username,
-            encoder.encode(userRegisterDTO.password))
+            encoder.encode(userRegisterDTO.password),
+            null)
 
         userRepository.save(user)
         return ResponseEntity.status(HttpStatus.OK).body(RegistrationState.USER_CREATED)

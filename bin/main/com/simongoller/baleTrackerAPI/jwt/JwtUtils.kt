@@ -15,8 +15,11 @@ import javax.crypto.SecretKey
 
 @Component
 class JwtUtils(
-    @Value("\${baleTrackerAPI.app.tokenSecret}")
-    private val tokenSecret: String,
+    @Value("\${baleTrackerAPI.app.accessTokenSecret}")
+    private val accessTokenSecret: String,
+
+    @Value("\${baleTrackerAPI.app.refreshTokenSecret}")
+    private val refreshTokenSecret: String,
 
     @Value("\${baleTrackerAPI.app.accessTokenExpirationMs}")
     private val accessTokenExpiration: Long,
@@ -24,24 +27,37 @@ class JwtUtils(
     @Value("\${baleTrackerAPI.app.refreshTokenExpirationMs}")
     private val refreshTokenExpiration: Long
 ) {
-    private val key: SecretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(tokenSecret))
+    private val accessKey: SecretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(accessTokenSecret))
+    private val refreshKey: SecretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(refreshTokenSecret))
     private val logger: Logger = LoggerFactory.getLogger(JwtUtils::class.java)
 
     fun generateAccessToken(authentication: Authentication): String {
-        val token = buildToken(authentication, accessTokenExpiration)
+        val token = buildToken(authentication, accessKey, accessTokenExpiration)
+        logger.info("New access token: $token")
+        return token
+    }
+
+    fun generateAccessToken(name: String): String {
+        val token = buildToken(name, accessKey, accessTokenExpiration)
         logger.info("New access token: $token")
         return token
     }
 
     fun generateRefreshToken(authentication: Authentication): String {
-        val token =  buildToken(authentication, accessTokenExpiration)
+        val token =  buildToken(authentication, refreshKey, refreshTokenExpiration)
+        logger.info("New refresh token: $token")
+        return token
+    }
+
+    fun generateRefreshToken(name: String): String {
+        val token =  buildToken(name, refreshKey, refreshTokenExpiration)
         logger.info("New refresh token: $token")
         return token
     }
 
     fun getUsernameFromToken(token: String): String {
         return Jwts.parser()
-            .verifyWith(key)
+            .verifyWith(accessKey)
             .build()
             .parseSignedClaims(token)
             .payload.subject
@@ -50,7 +66,7 @@ class JwtUtils(
     fun isTokenValid(token: String): Boolean {
         try {
             Jwts.parser()
-                .verifyWith(key)
+                .verifyWith(accessKey)
                 .build()
                 .parse(token)
 
@@ -69,22 +85,26 @@ class JwtUtils(
         return false
     }
 
-    fun <T : Any> extractClaim(token: String, claimsResolver: Function<Claims, T>): T {
-        val claims: Claims = extractAllClaims(token)
+    fun <T : Any> extractClaim(token: String, key: SecretKey, claimsResolver: Function<Claims, T>): T {
+        val claims: Claims = extractAllClaims(token, key)
         return claimsResolver.apply(claims)
     }
 
     // MARK: Helper Functions
 
     private fun isTokenExpired(token: String): Boolean {
-        return extractExpiration(token).before(Date())
+        return extractAccessExpiration(token).before(Date())
     }
 
-    private fun extractExpiration(token: String): Date {
-        return extractClaim(token) { obj: Claims -> obj.expiration }
+    fun extractAccessExpiration(token: String): Date {
+        return extractClaim(token, accessKey) { obj: Claims -> obj.expiration }
     }
 
-    private fun extractAllClaims(token: String): Claims {
+    fun extractRefreshExpiration(token: String): Date {
+        return extractClaim(token, refreshKey) { obj: Claims -> obj.expiration }
+    }
+
+    private fun extractAllClaims(token: String, key: SecretKey): Claims {
         return Jwts
             .parser()
             .verifyWith(key)
@@ -93,13 +113,23 @@ class JwtUtils(
             .payload as Claims
     }
 
-    private fun buildToken(authentication: Authentication, expiration: Long): String {
+    private fun buildToken(authentication: Authentication, secretKey: SecretKey, expiration: Long): String {
         val expirationDate = Date(Date().time + expiration)
         return Jwts.builder()
             .subject(authentication.name)
             .issuedAt(Date())
             .expiration(expirationDate)
-            .signWith(key)
+            .signWith(secretKey)
+            .compact()
+    }
+
+    private fun buildToken(name: String, secretKey: SecretKey, expiration: Long): String {
+        val expirationDate = Date(Date().time + expiration)
+        return Jwts.builder()
+            .subject(name)
+            .issuedAt(Date())
+            .expiration(expirationDate)
+            .signWith(secretKey)
             .compact()
     }
 }

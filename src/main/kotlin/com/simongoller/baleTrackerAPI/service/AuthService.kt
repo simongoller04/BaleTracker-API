@@ -9,6 +9,7 @@ import com.simongoller.baleTrackerAPI.model.user.UserLoginDTO
 import com.simongoller.baleTrackerAPI.model.user.UserRegisterDTO
 import com.simongoller.baleTrackerAPI.repositroy.RefreshTokenRepository
 import com.simongoller.baleTrackerAPI.repositroy.UserRepository
+import com.simongoller.baleTrackerAPI.utils.TimeUtils
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -30,7 +31,8 @@ class AuthService(
     @Autowired private val refreshTokenRepository: RefreshTokenRepository,
     @Autowired private val encoder: PasswordEncoder,
     @Autowired private val authenticationManager: AuthenticationManager,
-    @Autowired private val jwtUtils: JwtUtils
+    @Autowired private val jwtUtils: JwtUtils,
+    private val timeUtils: TimeUtils = TimeUtils()
 ) {
     private val logger: Logger = LoggerFactory.getLogger(AuthService::class.java)
 
@@ -45,6 +47,9 @@ class AuthService(
             userRegisterDTO.email,
             userRegisterDTO.username,
             encoder.encode(userRegisterDTO.password),
+            timeUtils.getCurrentDateTimeInFormat(),
+            null,
+            null,
             null)
 
         userRepository.save(user)
@@ -63,6 +68,8 @@ class AuthService(
 
             val user = userRepository.findByUsername(authentication.name)
             if (user != null) {
+                user.lastLoginTime = timeUtils.getCurrentDateTimeInFormat()
+                userRepository.save(user)
                 val refreshToken = RefreshToken(null, user, refreshToken, jwtUtils.extractRefreshExpiration(refreshToken))
                 refreshTokenRepository.save(refreshToken)
             }

@@ -6,10 +6,12 @@ import jakarta.persistence.*
 // user class used to internally store the users and their information
 data class User(
     @Id @GeneratedValue(strategy = GenerationType.UUID)
-    val id: String? = null,
+    val id: String?,
     val email: String,
     val username: String,
     val password: String,
-//    val profileImage: Image?
+    val creationTime: String,
+    var lastEditingTime: String?,
+    var lastLoginTime: String?,
     var profileImage: ByteArray?
 )

@@ -25,7 +25,7 @@ class UserController(
     }
 
     @PostMapping("/media/pic")
-    fun updateProfilePicture(@RequestParam("file") image: MultipartFile): ResponseEntity<*> {
+    fun updateProfilePicture(@RequestParam("image") image: MultipartFile): ResponseEntity<*> {
         return userService.updateProfilePicture(image)
     }
 
@@ -39,9 +39,15 @@ class UserController(
         return userService.deleteProfilePicture()
     }
 
-    // just for testing to get all users remove afterwards
+    // just for testing to get all users, remove afterwards
     @GetMapping("/all")
     fun getAllUsers(): ResponseEntity<List<User>> {
         return userService.getAllUsers()
+    }
+
+    // just for testing to delete all users, remove afterwards
+    @DeleteMapping("/all")
+    fun deleteAll(): ResponseEntity<*> {
+        return userService.deleteAllUsers()
     }
 }

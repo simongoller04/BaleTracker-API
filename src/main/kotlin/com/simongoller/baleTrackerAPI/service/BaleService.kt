@@ -19,11 +19,11 @@ class BaleService(
     private val timeUtils: TimeUtils = TimeUtils()
 ) {
     fun createBale(baleCreateDTO: BaleCreateDTO): ResponseEntity<*> {
-        val bale = getCurrentUser()?.id?.let {
+        val bale = getCurrentUser()?.toUserDto()?.let { user ->
             Bale(null,
                 baleCreateDTO.crop,
                 baleCreateDTO.baleType,
-                it,
+                user,
                 null,
                 timeUtils.getCurrentDateTimeInFormat(),
                 null,
@@ -42,7 +42,7 @@ class BaleService(
     fun collectBale(id: String): ResponseEntity<*> {
         var bale = baleRepository.findById(id)
         return if (bale != null) {
-            bale.get().collectedBy = getCurrentUser()?.id
+            bale.get().collectedBy = getCurrentUser()?.toUserDto()
             bale.get().collectionTime = timeUtils.getCurrentDateTimeInFormat()
             baleRepository.save(bale.get())
             ResponseEntity.ok(bale.get())
@@ -52,12 +52,10 @@ class BaleService(
     }
 
     fun getBales(): ResponseEntity<List<Bale>?> {
-        getCurrentUser()?.let {
-            it.id?.let { id ->
-                val bales = baleRepository.findByCreatedBy(id)
-                return ResponseEntity.ok(bales)
-            }
-        }
+        getCurrentUser()?.toUserDto()?.let {
+            val bales = baleRepository.findByCreatedBy(it)
+            return ResponseEntity.ok(bales)
+        } 
         return ResponseEntity.badRequest().body(null)
     }
 

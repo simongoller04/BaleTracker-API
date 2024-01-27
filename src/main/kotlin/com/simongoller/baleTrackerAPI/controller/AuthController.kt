@@ -1,6 +1,7 @@
 package com.simongoller.baleTrackerAPI.controller
 
 import com.simongoller.baleTrackerAPI.model.response.RegistrationState
+import com.simongoller.baleTrackerAPI.model.token.RefreshTokenDTO
 import com.simongoller.baleTrackerAPI.model.token.TokenDTO
 import com.simongoller.baleTrackerAPI.model.user.UserLoginDTO
 import com.simongoller.baleTrackerAPI.model.user.UserRegisterDTO
@@ -25,8 +26,8 @@ class AuthController(
         return authService.login(userLoginDTO)
     }
 
-    @RequestMapping("/refreshToken")
-    fun refreshToken(@RequestBody refreshToken: String): ResponseEntity<TokenDTO> {
+    @PostMapping("/refreshToken")
+    fun refreshToken(@RequestBody refreshToken: RefreshTokenDTO): ResponseEntity<TokenDTO?> {
         return authService.refresh(refreshToken)
     }
 }

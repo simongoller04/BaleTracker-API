@@ -14,4 +14,10 @@ data class User(
     var lastEditingTime: String?,
     var lastLoginTime: String?,
     var profileImage: ByteArray?
-)
+) {
+    fun toUserDto(): UserDTO? {
+        return id?.let { UserDTO(it, email, username, creationTime, lastEditingTime, lastLoginTime) }
+    }
+}
+
+

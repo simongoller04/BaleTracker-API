@@ -1,5 +1,6 @@
 package com.simongoller.baleTrackerAPI.model.bale
 
+import com.simongoller.baleTrackerAPI.model.user.UserDTO
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import org.springframework.data.annotation.Id
@@ -11,9 +12,9 @@ data class Bale(
     val crop: Crop,
     val baleType: BaleType,
     // stores the user id of the creator
-    val createdBy: String,
+    val createdBy: UserDTO,
     // stores the user id of the collector
-    var collectedBy: String?,
+    var collectedBy: UserDTO?,
     val creationTime: String,
     var collectionTime: String?,
     val longitude: Double,

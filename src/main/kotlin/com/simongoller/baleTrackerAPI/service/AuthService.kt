@@ -1,8 +1,10 @@
 package com.simongoller.baleTrackerAPI.service
 
 import com.simongoller.baleTrackerAPI.jwt.JwtUtils
+import com.simongoller.baleTrackerAPI.model.bale.Bale
 import com.simongoller.baleTrackerAPI.model.response.RegistrationState
 import com.simongoller.baleTrackerAPI.model.token.RefreshToken
+import com.simongoller.baleTrackerAPI.model.token.RefreshTokenDTO
 import com.simongoller.baleTrackerAPI.model.token.TokenDTO
 import com.simongoller.baleTrackerAPI.model.user.User
 import com.simongoller.baleTrackerAPI.model.user.UserLoginDTO
@@ -10,6 +12,7 @@ import com.simongoller.baleTrackerAPI.model.user.UserRegisterDTO
 import com.simongoller.baleTrackerAPI.repositroy.RefreshTokenRepository
 import com.simongoller.baleTrackerAPI.repositroy.UserRepository
 import com.simongoller.baleTrackerAPI.utils.TimeUtils
+import org.apache.coyote.Response
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -22,6 +25,7 @@ import org.springframework.security.core.AuthenticationException
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import java.lang.Error
 import java.util.Date
 
 
@@ -80,20 +84,13 @@ class AuthService(
         }
     }
 
-    fun refresh(refreshToken: String): ResponseEntity<TokenDTO> {
-        return try {
-            val token = refreshTokenRepository.findByToken(refreshToken)
-                ?: throw Exception("Refresh token is not found in database!")
-
+    fun refresh(refreshToken: RefreshTokenDTO): ResponseEntity<TokenDTO?> {
+        refreshTokenRepository.findByToken(refreshToken.refreshToken)?.let { token ->
             if (token.expiryDate > Date()) {
                 val newAccessToken = jwtUtils.generateAccessToken(token.user.username)
                 return ResponseEntity.ok(TokenDTO(newAccessToken, token.token))
-            } else {
-                throw Exception("Refresh token is expired please login again")
             }
-        } catch (e: Exception) {
-            ResponseEntity.badRequest().body(TokenDTO(accessToken = "$e", refreshToken = ""))
         }
+        return ResponseEntity.badRequest().body(null)
     }
-
 }

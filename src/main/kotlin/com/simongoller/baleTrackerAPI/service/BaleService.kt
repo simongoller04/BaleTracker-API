@@ -55,7 +55,7 @@ class BaleService(
         getCurrentUser()?.toUserDto()?.let {
             val bales = baleRepository.findByCreatedBy(it)
             return ResponseEntity.ok(bales)
-        } 
+        }
         return ResponseEntity.badRequest().body(null)
     }
 

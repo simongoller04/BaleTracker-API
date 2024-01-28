@@ -1,18 +1,15 @@
 package com.simongoller.baleTrackerAPI.service
 
 import com.simongoller.baleTrackerAPI.jwt.JwtUtils
-import com.simongoller.baleTrackerAPI.model.bale.Bale
-import com.simongoller.baleTrackerAPI.model.response.RegistrationState
+import com.simongoller.baleTrackerAPI.model.response.ErrorResponse
 import com.simongoller.baleTrackerAPI.model.token.RefreshToken
 import com.simongoller.baleTrackerAPI.model.token.RefreshTokenDTO
 import com.simongoller.baleTrackerAPI.model.token.TokenDTO
-import com.simongoller.baleTrackerAPI.model.user.User
 import com.simongoller.baleTrackerAPI.model.user.UserLoginDTO
 import com.simongoller.baleTrackerAPI.model.user.UserRegisterDTO
 import com.simongoller.baleTrackerAPI.repositroy.RefreshTokenRepository
 import com.simongoller.baleTrackerAPI.repositroy.UserRepository
 import com.simongoller.baleTrackerAPI.utils.TimeUtils
-import org.apache.coyote.Response
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -25,7 +22,6 @@ import org.springframework.security.core.AuthenticationException
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
-import java.lang.Error
 import java.util.Date
 
 
@@ -40,31 +36,26 @@ class AuthService(
 ) {
     private val logger: Logger = LoggerFactory.getLogger(AuthService::class.java)
 
-    fun register(userRegisterDTO: UserRegisterDTO): ResponseEntity<RegistrationState> {
+    fun register(userRegisterDTO: UserRegisterDTO): ResponseEntity<ErrorResponse> {
         if (userRepository.existsByUsername(userRegisterDTO.username)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(RegistrationState.USERNAME_TAKEN)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse.USERNAME_TAKEN)
         } else if (userRepository.existsByEmail(userRegisterDTO.email)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(RegistrationState.EMAIL_TAKEN)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse.EMAIL_TAKEN)
         }
 
-        val user = User(null,
-            userRegisterDTO.email,
-            userRegisterDTO.username,
-            encoder.encode(userRegisterDTO.password),
-            timeUtils.getCurrentDateTimeInFormat(),
-            null,
-            null,
-            null)
-
-        userRepository.save(user)
-        return ResponseEntity.status(HttpStatus.OK).body(RegistrationState.USER_CREATED)
+        userRepository.save(userRegisterDTO.toUser())
+        return ResponseEntity.status(HttpStatus.OK).body(ErrorResponse.USER_CREATED)
     }
 
-    fun login(userLoginDTO: UserLoginDTO): ResponseEntity<TokenDTO?> {
-        return try {
+    fun login(userLoginDTO: UserLoginDTO): ResponseEntity<*> {
+        try {
+            if (!userRepository.existsByUsername(userLoginDTO.username)) {
+                return ResponseEntity.badRequest().body(ErrorResponse.INVALID_USERNAME)
+            }
             val authentication: Authentication = authenticationManager.authenticate(
                 UsernamePasswordAuthenticationToken(userLoginDTO.username, userLoginDTO.password)
             )
+
             SecurityContextHolder.getContext().authentication = authentication
 
             val accessToken = jwtUtils.generateAccessToken(authentication)
@@ -77,10 +68,9 @@ class AuthService(
                 val refreshToken = RefreshToken(null, user, refreshToken, jwtUtils.extractRefreshExpiration(refreshToken))
                 refreshTokenRepository.save(refreshToken)
             }
-
-            ResponseEntity.status(HttpStatus.OK).body(TokenDTO(accessToken, refreshToken))
+            return ResponseEntity.status(HttpStatus.OK).body(TokenDTO(accessToken, refreshToken))
         } catch (ex: AuthenticationException) {
-            ResponseEntity.badRequest().body(null)
+            return ResponseEntity.badRequest().body(ErrorResponse.INVALID_PASSWORD)
         }
     }
 

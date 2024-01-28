@@ -1,9 +1,6 @@
 package com.simongoller.baleTrackerAPI.controller
 
-import com.simongoller.baleTrackerAPI.model.bale.Bale
 import com.simongoller.baleTrackerAPI.model.bale.BaleCreateDTO
-import com.simongoller.baleTrackerAPI.model.response.RegistrationState
-import com.simongoller.baleTrackerAPI.model.user.UserRegisterDTO
 import com.simongoller.baleTrackerAPI.service.BaleService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*

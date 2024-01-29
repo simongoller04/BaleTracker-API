@@ -5,5 +5,7 @@ import com.simongoller.baleTrackerAPI.model.user.UserDTO
 import org.springframework.data.mongodb.repository.MongoRepository
 
 interface BaleRepository: MongoRepository<Bale, String> {
-    fun findByCreatedBy(createdBy: UserDTO): List<Bale>?
+    fun findByCreatedBy(createdBy: String): MutableList<Bale>?
+    fun findByCollectedBy(collectedBy: String): MutableList<Bale>?
+    fun findByFarm(farm: String): MutableList<Bale>?
 }

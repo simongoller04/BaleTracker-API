@@ -13,7 +13,11 @@ data class Bale(
     val creationTime: String,
     var collectedBy: String?,
     var collectionTime: String?,
-    val longitude: Double,
-    val latitude: Double,
+    val coordinate: Coordinate,
     val farm: String?
+)
+
+data class Coordinate(
+    val latitude: Double,
+    val longitude: Double
 )

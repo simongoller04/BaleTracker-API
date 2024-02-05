@@ -2,6 +2,7 @@ package com.simongoller.baleTrackerAPI.controller
 
 import com.simongoller.baleTrackerAPI.model.bale.Bale
 import com.simongoller.baleTrackerAPI.model.bale.BaleCreateDTO
+import com.simongoller.baleTrackerAPI.model.query.BaleQuery
 import com.simongoller.baleTrackerAPI.service.BaleService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -42,13 +43,25 @@ class BaleController(
         return baleService.getAllBales()
     }
 
+    // get all bales where farm equal the given id
     @GetMapping("/get/all/farm/{id}")
     fun getAllBalesFromFarm(@PathVariable id: String): ResponseEntity<List<Bale>?> {
         return baleService.getAllBalesFromFarm(id)
     }
 
+    @PostMapping("/query")
+    fun queryBales(@RequestBody query: BaleQuery): ResponseEntity<MutableList<Bale>?> {
+        return baleService.queryBales(query)
+    }
+
+    // just for testing remove later
     @GetMapping("/get/all/testing")
     fun getAll(): ResponseEntity<List<Bale>?> {
         return baleService.getAll()
+    }
+
+    @DeleteMapping("/get/all/testing")
+    fun deleteAll(): ResponseEntity<*> {
+        return baleService.deleteAll()
     }
 }

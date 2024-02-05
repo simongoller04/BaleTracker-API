@@ -4,5 +4,6 @@ enum class BaleType {
     ROUND,
     SQUARE,
     ROUND_WRAPPED,
-    SQUARE_WRAPPED
+    SQUARE_WRAPPED,
+    ALL
 }

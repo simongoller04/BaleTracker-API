@@ -9,9 +9,9 @@ data class BaleQuery(
     val crop: Crop?,
     val baleType: BaleType?,
     val createdBy: String?,
-    val creationTime: TimeSpan?,
+    val creationTimeSpan: TimeSpan?,
     val collectedBy: String?,
-    val collectionTime: TimeSpan?,
+    val collectionTimeSpan: TimeSpan?,
     val coordinate: Coordinate?,
     val farm: String?
 )

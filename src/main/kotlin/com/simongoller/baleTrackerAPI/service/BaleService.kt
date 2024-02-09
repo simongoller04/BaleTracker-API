@@ -14,6 +14,7 @@ import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
+import java.time.LocalDateTime
 
 @Service
 class BaleService(
@@ -28,7 +29,7 @@ class BaleService(
                 baleCreateDTO.crop,
                 baleCreateDTO.baleType,
                 it,
-                timeUtils.getCurrentDateTimeInFormat(),
+                LocalDateTime.now(),
                 null,
                 null,
                 baleCreateDTO.coordinate,
@@ -48,7 +49,7 @@ class BaleService(
         var bale = baleRepository.findById(id)
         return if (bale != null) {
             bale.get().collectedBy = currentUserUtils.getUserId()
-            bale.get().collectionTime = timeUtils.getCurrentDateTimeInFormat()
+            bale.get().collectionTime = LocalDateTime.now()
             baleRepository.save(bale.get())
             ResponseEntity.ok(bale.get())
         } else {
@@ -96,7 +97,8 @@ class BaleService(
     }
 
     fun queryBales(baleQuery: BaleQuery): ResponseEntity<MutableList<Bale>?> {
-        var query = Query()
+        val query = Query()
+
         if (baleQuery.crop != Crop.ALL) {
             query.addCriteria(Criteria.where("crop").`is`(baleQuery.crop))
         }
@@ -106,14 +108,18 @@ class BaleService(
         if (baleQuery.createdBy != null) {
             query.addCriteria(Criteria.where("createdBy").`is`(baleQuery.createdBy))
         }
-        if (baleQuery.creationTime != null) {
-            query.addCriteria(Criteria.where("creationTime").gte(baleQuery.creationTime.start).lt(baleQuery.creationTime.end))
+        if (baleQuery.creationTimeSpan != null) {
+            val startTime = LocalDateTime.parse(baleQuery.creationTimeSpan.start)
+            val endTime = LocalDateTime.parse(baleQuery.creationTimeSpan.end)
+            query.addCriteria(Criteria.where("creationTime").gte(startTime).lt(endTime))
         }
         if (baleQuery.collectedBy != null) {
             query.addCriteria(Criteria.where("collectedBy").`is`(baleQuery.collectedBy))
         }
-        if (baleQuery.collectionTime != null) {
-            query.addCriteria(Criteria.where("collectionTime").gte(baleQuery.collectionTime!!.start).lt(baleQuery.collectionTime!!.end))
+        if (baleQuery.collectionTimeSpan != null) {
+            val startTime = LocalDateTime.parse(baleQuery.collectionTimeSpan.start)
+            val endTime = LocalDateTime.parse(baleQuery.collectionTimeSpan.end)
+            query.addCriteria(Criteria.where("collectionTime").gte(startTime).lt(endTime))
         }
         if (baleQuery.coordinate != null) {
             query.addCriteria(Criteria.where("coordinate").`is`(baleQuery.coordinate))
@@ -122,7 +128,7 @@ class BaleService(
             query.addCriteria(Criteria.where("farm").`is`(baleQuery.farm))
         }
 
-        var bales = mt.find(query, Bale::class.java)
+        val bales = mt.find(query, Bale::class.java)
 
         return ResponseEntity.ok(bales)
     }

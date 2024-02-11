@@ -6,15 +6,10 @@ import com.simongoller.baleTrackerAPI.model.user.UserDTO
 import com.simongoller.baleTrackerAPI.repositroy.UserRepository
 import com.simongoller.baleTrackerAPI.utils.CurrentUserUtils
 import com.simongoller.baleTrackerAPI.utils.TimeUtils
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
-import org.springframework.security.core.Authentication
-import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
-
 
 @Service
 class UserService(
@@ -22,10 +17,25 @@ class UserService(
     @Autowired private val currentUserUtils: CurrentUserUtils,
     private val timeUtils: TimeUtils = TimeUtils()
 ) {
-    private val logger: Logger = LoggerFactory.getLogger(UserService::class.java)
-
     fun getUser(): ResponseEntity<UserDTO> {
         return ResponseEntity.ok(currentUserUtils.getUser()?.toUserDto())
+    }
+
+    fun getUser(id: String): ResponseEntity<UserDTO?> {
+        val user = userRepository.findById(id)
+        return if (user.isEmpty) {
+            return ResponseEntity.badRequest().body(null)
+        } else {
+            ResponseEntity.ok(user.orElse(null).toUserDto())
+        }
+    }
+
+    fun getUsers(userIds: List<String>): ResponseEntity<List<UserDTO>> {
+        val users: MutableList<UserDTO> = arrayListOf()
+        for (userId in userIds) {
+            userRepository.findById(userId).orElse(null).toUserDto()?.let { users.add(it) }
+        }
+        return ResponseEntity.ok(users)
     }
 
     fun deleteUser(): ResponseEntity<UserDeletionResponse> {

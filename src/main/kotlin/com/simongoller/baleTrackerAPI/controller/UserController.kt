@@ -19,6 +19,16 @@ class UserController(
         return userService.getUser()
     }
 
+    @GetMapping("/{id}")
+    fun getUser(@PathVariable id: String): ResponseEntity<UserDTO?> {
+        return userService.getUser(id)
+    }
+
+    @GetMapping("/multiple")
+    fun getUsers(@RequestBody users: List<String>): ResponseEntity<List<UserDTO>> {
+        return userService.getUsers(users)
+    }
+
     @DeleteMapping("/delete")
     fun deleteUser(): ResponseEntity<UserDeletionResponse> {
         return userService.deleteUser()

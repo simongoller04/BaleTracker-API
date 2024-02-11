@@ -14,6 +14,7 @@ import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
+import java.lang.Error
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -50,12 +51,21 @@ class BaleService(
     }
 
     fun collectBale(id: String): ResponseEntity<*> {
-        var bale = baleRepository.findById(id)
+        val bale = baleRepository.findById(id)
         return if (bale != null) {
             bale.get().collectedBy = currentUserUtils.getUserId()
             bale.get().collectionTime = timeUtils.getCurrentDateTime()
             baleRepository.save(bale.get())
             ResponseEntity.ok(bale.get())
+        } else {
+            ResponseEntity.badRequest().body(null)
+        }
+    }
+
+    fun deleteBale(id: String): ResponseEntity<*> {
+        return if (!baleRepository.findById(id).isEmpty) {
+            baleRepository.deleteById(id)
+            ResponseEntity.ok(null)
         } else {
             ResponseEntity.badRequest().body(null)
         }

@@ -25,6 +25,12 @@ class BaleController(
         return baleService.collectBale(id)
     }
 
+    // delete the bale with the given id
+    @DeleteMapping("/delete/{id}")
+    fun deleteBale(@PathVariable id: String): ResponseEntity<*> {
+        return baleService.deleteBale(id)
+    }
+
     // get all bales created by the currently authenticated user
     @GetMapping("/get/created")
     fun getCreatedBales(): ResponseEntity<List<Bale>?> {

@@ -24,6 +24,7 @@ Icon
 # Exclude Folder List #
 .gradle/
 build/
+build/kotlin
 
 
 ### Eclipse ###
@@ -62,8 +63,3 @@ local.properties
 
 ### SVN ###
 .svn/
-
-### Maven ###
-target/
-
-/bin

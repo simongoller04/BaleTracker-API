@@ -3,7 +3,7 @@ package com.simongoller.baleTrackerAPI.model.bale
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import org.springframework.data.annotation.Id
-import java.time.LocalDateTime
+import java.time.Instant
 
 data class Bale(
     @Id @GeneratedValue(strategy = GenerationType.UUID)
@@ -11,9 +11,9 @@ data class Bale(
     val crop: Crop,
     val baleType: BaleType,
     val createdBy: String,
-    val creationTime: LocalDateTime,
+    val creationTime: Instant,
     var collectedBy: String?,
-    var collectionTime: LocalDateTime?,
+    var collectionTime: Instant?,
     val coordinate: Coordinate,
     val farm: String?,
 )

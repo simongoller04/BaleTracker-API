@@ -14,7 +14,11 @@ import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
+import java.time.Instant
 import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 
 @Service
 class BaleService(
@@ -29,7 +33,7 @@ class BaleService(
                 baleCreateDTO.crop,
                 baleCreateDTO.baleType,
                 it,
-                LocalDateTime.now(),
+                timeUtils.getCurrentDateTime(),
                 null,
                 null,
                 baleCreateDTO.coordinate,
@@ -49,7 +53,7 @@ class BaleService(
         var bale = baleRepository.findById(id)
         return if (bale != null) {
             bale.get().collectedBy = currentUserUtils.getUserId()
-            bale.get().collectionTime = LocalDateTime.now()
+            bale.get().collectionTime = timeUtils.getCurrentDateTime()
             baleRepository.save(bale.get())
             ResponseEntity.ok(bale.get())
         } else {
@@ -109,16 +113,16 @@ class BaleService(
             query.addCriteria(Criteria.where("createdBy").`is`(baleQuery.createdBy))
         }
         if (baleQuery.creationTimeSpan != null) {
-            val startTime = LocalDateTime.parse(baleQuery.creationTimeSpan.start)
-            val endTime = LocalDateTime.parse(baleQuery.creationTimeSpan.end)
+            val startTime = Instant.parse(baleQuery.creationTimeSpan.start)
+            val endTime = Instant.parse(baleQuery.creationTimeSpan.end)
             query.addCriteria(Criteria.where("creationTime").gte(startTime).lt(endTime))
         }
         if (baleQuery.collectedBy != null) {
             query.addCriteria(Criteria.where("collectedBy").`is`(baleQuery.collectedBy))
         }
         if (baleQuery.collectionTimeSpan != null) {
-            val startTime = LocalDateTime.parse(baleQuery.collectionTimeSpan.start)
-            val endTime = LocalDateTime.parse(baleQuery.collectionTimeSpan.end)
+            val startTime = Instant.parse(baleQuery.collectionTimeSpan.start)
+            val endTime = Instant.parse(baleQuery.collectionTimeSpan.end)
             query.addCriteria(Criteria.where("collectionTime").gte(startTime).lt(endTime))
         }
         if (baleQuery.coordinate != null) {

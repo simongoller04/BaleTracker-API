@@ -6,8 +6,8 @@ import com.simongoller.baleTrackerAPI.model.bale.Crop
 import com.simongoller.baleTrackerAPI.model.bale.TimeSpan
 
 data class BaleQuery(
-    val crop: Crop?,
-    val baleType: BaleType?,
+    val crop: Crop,
+    val baleType: BaleType,
     val createdBy: String?,
     val creationTimeSpan: TimeSpan?,
     val collectedBy: String?,

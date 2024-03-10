@@ -24,7 +24,7 @@ class UserController(
         return userService.getUser(id)
     }
 
-    @GetMapping("/multiple")
+    @PostMapping("/multiple")
     fun getUsers(@RequestBody users: List<String>): ResponseEntity<List<UserDTO>> {
         return userService.getUsers(users)
     }
@@ -41,7 +41,8 @@ class UserController(
 
     @GetMapping("/media/{id}/pic")
     fun getProfilePicture(@PathVariable id: String): ResponseEntity<ByteArray?> {
-        return userService.getProfilePicture()
+        return userService.getProfilePicture(id)
+        //TODO is returning the image of the currently authenticated user not with the given id
     }
 
     @DeleteMapping("/media/pic")

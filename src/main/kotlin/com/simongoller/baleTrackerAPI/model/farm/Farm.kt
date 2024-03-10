@@ -7,17 +7,24 @@ import org.springframework.data.annotation.Id
 import java.time.Instant
 
 data class Farm(
-    @Id @GeneratedValue(strategy = GenerationType.UUID)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: String?,
-    val name: String,
-    val description: String?,
-    val coordinate: Coordinate?,
+    var name: String,
+    var description: String?,
+    var coordinate: Coordinate?,
     val createdBy: String,
     val creationTime: Instant,
-    var members: MutableList<String>?,
+    var members: MutableList<String>,
     var image: ByteArray?
 ) {
     fun toFarmDTO(): FarmDTO {
         return FarmDTO(id!!, name, description, coordinate, createdBy, creationTime, members)
+    }
+
+    fun update(farmUpdateDTO: FarmUpdateDTO) {
+        name = farmUpdateDTO.name
+        description = farmUpdateDTO.description
+        coordinate = farmUpdateDTO.coordinate
+        members = farmUpdateDTO.members
     }
 }

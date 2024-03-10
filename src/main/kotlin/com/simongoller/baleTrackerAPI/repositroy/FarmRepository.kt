@@ -5,4 +5,5 @@ import org.springframework.data.mongodb.repository.MongoRepository
 
 interface FarmRepository: MongoRepository<Farm, String> {
     fun findFarmById(id: String): Farm?
+    fun findFarmByName(name: String): Farm?
 }

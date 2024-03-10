@@ -10,7 +10,7 @@ data class FarmDTO(
     val coordinate: Coordinate?,
     val createdBy: String,
     val creationTime: Instant,
-    val members: MutableList<String>?,
+    val members: MutableList<String>,
 ) {
     fun toFarm(): Farm {
         return Farm(null, name, description, coordinate, createdBy, creationTime, members, null)

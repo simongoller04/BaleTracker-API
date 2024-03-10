@@ -56,9 +56,9 @@ class UserService(
         return ResponseEntity.badRequest().body(null)
     }
 
-    fun getProfilePicture(): ResponseEntity<ByteArray?> {
-        currentUserUtils.getUser()?.let {
-            it.profileImage?.let { image ->
+    fun getProfilePicture(id: String): ResponseEntity<ByteArray?> {
+        userRepository.findById(id).let {
+            it.get().profileImage?.let { image ->
                 return ResponseEntity.ok(image)
             }
         }

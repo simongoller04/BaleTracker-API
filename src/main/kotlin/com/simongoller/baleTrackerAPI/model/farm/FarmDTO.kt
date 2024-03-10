@@ -11,8 +11,9 @@ data class FarmDTO(
     val createdBy: String,
     val creationTime: Instant,
     val members: MutableList<String>,
-) {
+    var imageKey: String?,
+    ) {
     fun toFarm(): Farm {
-        return Farm(null, name, description, coordinate, createdBy, creationTime, members, null)
+        return Farm(null, name, description, coordinate, createdBy, creationTime, members, imageKey, null)
     }
 }

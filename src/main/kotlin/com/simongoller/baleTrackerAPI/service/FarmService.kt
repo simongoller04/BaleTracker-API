@@ -11,11 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
-import org.springframework.data.mongodb.core.query.Update
-import org.springframework.data.mongodb.core.query.UpdateDefinition
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
+import java.util.UUID
 
 @Service
 class FarmService(
@@ -36,6 +35,7 @@ class FarmService(
                 it,
                 timeUtils.getCurrentDateTime(),
                 members,
+                null,
                 null)
         }
 
@@ -61,7 +61,7 @@ class FarmService(
         farmRepository.findFarmById(id)?.let {
             currentUserUtils.getUserId()?.let { userId ->
                 if (it.createdBy == userId) {
-                    it.members?.addAll(members)
+                    it.members.addAll(members)
                     farmRepository.save(it)
                     return ResponseEntity.ok(null)
                 }
@@ -72,6 +72,7 @@ class FarmService(
 
     fun updateFarmPicture(id: String, image: MultipartFile): ResponseEntity<*> {
         farmRepository.findFarmById(id)?.let {
+            it.imageKey = UUID.randomUUID().toString()
             it.image = image.bytes
             farmRepository.save(it)
             return ResponseEntity.ok(null)
@@ -79,8 +80,8 @@ class FarmService(
         return ResponseEntity.badRequest().body(null)
     }
 
-    fun getFarmPicture(id: String): ResponseEntity<ByteArray?> {
-        farmRepository.findFarmById(id)?.image?.let {
+    fun getFarmPicture(imageKey: String): ResponseEntity<ByteArray?> {
+        farmRepository.findFarmByImageKey(imageKey)?.image?.let {
             return ResponseEntity.ok(it)
         }
         return ResponseEntity.badRequest().body(null)
@@ -88,6 +89,7 @@ class FarmService(
 
     fun deleteFarmPicture(id: String): ResponseEntity<*> {
         farmRepository.findFarmById(id)?.let {
+            it.imageKey = null
             it.image = null
             farmRepository.save(it)
             return ResponseEntity.ok(null)

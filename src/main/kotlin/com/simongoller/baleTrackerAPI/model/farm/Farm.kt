@@ -15,10 +15,11 @@ data class Farm(
     val createdBy: String,
     val creationTime: Instant,
     var members: MutableList<String>,
+    var imageKey: String?,
     var image: ByteArray?
 ) {
     fun toFarmDTO(): FarmDTO {
-        return FarmDTO(id!!, name, description, coordinate, createdBy, creationTime, members)
+        return FarmDTO(id!!, name, description, coordinate, createdBy, creationTime, members, imageKey)
     }
 
     fun update(farmUpdateDTO: FarmUpdateDTO) {

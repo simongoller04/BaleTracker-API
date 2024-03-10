@@ -35,9 +35,9 @@ class FarmController(
         return farmService.updateFarmPicture(id, image)
     }
 
-    @GetMapping("/media/{id}/pic")
-    fun getFarmPicture(@PathVariable id: String): ResponseEntity<ByteArray?> {
-        return farmService.getFarmPicture(id)
+    @GetMapping("/media/{imageKey}/pic")
+    fun getFarmPicture(@PathVariable imageKey: String): ResponseEntity<ByteArray?> {
+        return farmService.getFarmPicture(imageKey)
     }
 
     @DeleteMapping("/media/{id}/pic")

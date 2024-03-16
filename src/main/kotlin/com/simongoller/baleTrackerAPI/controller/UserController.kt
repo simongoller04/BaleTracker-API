@@ -7,6 +7,7 @@ import com.simongoller.baleTrackerAPI.service.UserService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
+import javax.crypto.SecretKey
 
 @RestController
 @RequestMapping("/api/user")
@@ -39,10 +40,9 @@ class UserController(
         return userService.updateProfilePicture(image)
     }
 
-    @GetMapping("/media/{id}/pic")
-    fun getProfilePicture(@PathVariable id: String): ResponseEntity<ByteArray?> {
-        return userService.getProfilePicture(id)
-        //TODO is returning the image of the currently authenticated user not with the given id
+    @GetMapping("/media/{imageKey}/pic")
+    fun getProfilePicture(@PathVariable imageKey: String): ResponseEntity<ByteArray?> {
+        return userService.getProfilePicture(imageKey)
     }
 
     @DeleteMapping("/media/pic")

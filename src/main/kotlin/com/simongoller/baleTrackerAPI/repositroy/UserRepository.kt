@@ -11,4 +11,5 @@ interface UserRepository : MongoRepository<User, String>, CrudRepository<User, S
     fun findByUsername(username: String): User?
     fun existsByUsername(username: String): Boolean
     fun existsByEmail(email: String): Boolean
+    fun findByImageKey(imageKey: String): User?
 }

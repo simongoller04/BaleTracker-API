@@ -13,10 +13,11 @@ data class User(
     val creationTime: String,
     var lastEditingTime: String?,
     var lastLoginTime: String?,
+    var imageKey: String?,
     var profileImage: ByteArray?
 ) {
     fun toUserDto(): UserDTO? {
-        return id?.let { UserDTO(it, email, username, creationTime, lastEditingTime, lastLoginTime) }
+        return id?.let { UserDTO(it, email, username, creationTime, lastEditingTime, lastLoginTime, imageKey) }
     }
 }
 

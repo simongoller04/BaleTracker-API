@@ -7,5 +7,6 @@ data class UserDTO(
     val username: String,
     val creationTime: String,
     val lastEditingTime: String?,
-    val lastLoginTime: String?
+    val lastLoginTime: String?,
+    var imageKey: String?
 )

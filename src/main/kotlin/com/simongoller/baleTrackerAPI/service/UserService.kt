@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
+import java.util.UUID
+import javax.crypto.SecretKey
 
 @Service
 class UserService(
@@ -48,6 +50,7 @@ class UserService(
 
     fun updateProfilePicture(image: MultipartFile): ResponseEntity<*> {
         currentUserUtils.getUser()?.let {
+            it.imageKey = UUID.randomUUID().toString()
             it.profileImage = image.bytes
             it.lastEditingTime = timeUtils.getCurrentDateTimeInFormat()
             userRepository.save(it)
@@ -56,17 +59,16 @@ class UserService(
         return ResponseEntity.badRequest().body(null)
     }
 
-    fun getProfilePicture(id: String): ResponseEntity<ByteArray?> {
-        userRepository.findById(id).let {
-            it.get().profileImage?.let { image ->
-                return ResponseEntity.ok(image)
-            }
+    fun getProfilePicture(imageKey: String): ResponseEntity<ByteArray?> {
+        userRepository.findByImageKey(imageKey)?.profileImage?.let {
+            return ResponseEntity.ok(it)
         }
         return ResponseEntity.badRequest().body(null)
     }
 
     fun deleteProfilePicture(): ResponseEntity<*> {
         currentUserUtils.getUser()?.let {
+            it.imageKey = null
             it.profileImage = null
             it.lastEditingTime = timeUtils.getCurrentDateTimeInFormat()
             userRepository.save(it)

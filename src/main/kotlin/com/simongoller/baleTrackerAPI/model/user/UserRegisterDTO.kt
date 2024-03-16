@@ -20,6 +20,7 @@ data class UserRegisterDTO(
             timeUtils.getCurrentDateTimeInFormat(),
             null,
             null,
+            null,
             null)
     }
 }

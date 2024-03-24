@@ -16,6 +16,8 @@ data class User(
     var imageKey: String?,
     var profileImage: ByteArray?
 ) {
+    constructor(email: String, username: String, password: String, creationTime: String): this(null, email, username, password, creationTime, null, null, null, null)
+
     fun toUserDto(): UserDTO? {
         return id?.let { UserDTO(it, email, username, creationTime, lastEditingTime, lastLoginTime, imageKey) }
     }

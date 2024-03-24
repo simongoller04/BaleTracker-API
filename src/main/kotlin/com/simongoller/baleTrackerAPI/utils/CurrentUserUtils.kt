@@ -16,7 +16,17 @@ class CurrentUserUtils(
         return userRepository.findByUsername(auth.name)
     }
 
-    fun getUserId(): String? {
-        return getUser()?.id
+    fun getUserId(): String {
+        getUser()?.id?.let {
+            return it
+        }
+        return "no id found"
+    }
+
+    fun getUsername(): String {
+        getUser()?.username?.let {
+            return it
+        }
+        return "no username found"
     }
 }

@@ -13,14 +13,6 @@ data class UserRegisterDTO(
     private val encoder: PasswordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder()
 
     fun toUser(): User {
-        return User(null,
-            email,
-            username,
-            encoder.encode(password),
-            timeUtils.getCurrentDateTimeInFormat(),
-            null,
-            null,
-            null,
-            null)
+        return User(email, username, encoder.encode(password), timeUtils.getCurrentDateTimeInFormat())
     }
 }

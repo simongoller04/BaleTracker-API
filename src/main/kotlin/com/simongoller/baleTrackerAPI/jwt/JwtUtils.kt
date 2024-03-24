@@ -12,7 +12,6 @@ import java.util.*
 import java.util.function.Function
 import javax.crypto.SecretKey
 
-
 @Component
 class JwtUtils(
     @Value("\${baleTrackerAPI.app.accessTokenSecret}")

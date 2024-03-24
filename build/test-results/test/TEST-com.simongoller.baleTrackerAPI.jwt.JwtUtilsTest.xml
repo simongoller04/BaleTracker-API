@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.simongoller.baleTrackerAPI.jwt.JwtUtilsTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2023-12-09T07:24:44" hostname="Simons-MacBook-Air.local" time="0.521">
-  <properties/>
-  <testcase name="should return false for invalid JWT token()" classname="com.simongoller.baleTrackerAPI.jwt.JwtUtilsTest" time="0.521"/>
-  <system-out><![CDATA[08:24:45.207 [Test worker] ERROR com.simongoller.baleTrackerAPI.jwt.JwtUtils -- Invalid JWT token: Invalid compact JWT string: Compact JWSs must contain exactly 2 period characters, and compact JWEs must contain exactly 4.  Found: 0
-]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>
